@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push: 
+    branches: main
+  pull_request:
+    branches: main
+  workflow_dispatch:
+
+jobs:
+  build: 
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        
+      - name: Run one-line script
+        run: echo Hello, World!  
+
+      - name: Run multi-line script
+        run: |
+         echo Add other actions
+         echo to build and test the project!
