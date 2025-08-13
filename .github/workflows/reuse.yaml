@@ -1,0 +1,17 @@
+name: Reuse other workflow
+
+on: [workflow_dispatch]
+
+jobs:
+  call-workflow:
+    uses: ./.github/workflows/resuable.yml
+    with:
+      who-to-greet: '$octocat'
+
+  use-output:
+    runs-on: ubuntu-22.04
+    needs: [call-workflow]
+    steps:
+    - name: Output current time
+      run: echo 'The time is ${{ needs.call-to-workflow.outputs.current-time }}'
+  
