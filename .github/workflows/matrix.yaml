@@ -3,11 +3,11 @@ on: push
 jobs:
   Build:
     runs-on: ubuntu-22.04
-    container:
-      image: ${{ matrix.container }}
     strategy:
       matrix:
-        container: ["gradle:6-jdk8", "gradle:6-jdk11", "gradle:6-jdk17"]
+        container: ["gradle:6-jdk17"]
+    container:
+      image: ${{ matrix.container }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v5
