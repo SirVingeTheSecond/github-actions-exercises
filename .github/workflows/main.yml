@@ -1,7 +1,11 @@
 name: Main workflow
 on: push
+env:
+  docker_username: ${{ sirvingethesecond }}
+  docker_password: ${{ secrets.GITHUB_TOKEN }}
+  GIT_COMMIT: ${{ github.sha }}
 jobs:
-  build: 
+  Build: 
     runs-on: ubuntu-22.04
     container: gradle:6-jdk11
     steps:
@@ -15,18 +19,18 @@ jobs:
         run: ci/unit-test-app.sh
 
       - name: Upload repository
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
          name: code
          path: .
          include-hidden-files: true
 
-  linting:
+  Linting:
     runs-on: ubuntu-22.04
-    needs: [build]
+    needs: [Build]
     steps:
       - name: Download code
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: code
           path: .
@@ -37,3 +41,19 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISABLE_ERRORS: true
+
+  Docker-image:
+    runs-on: ubuntu-22.04
+    needs: [Build]
+    permissions:
+      packages: write
+    steps:
+      - name: Download code artifact
+        uses: actions/download-artifact@v5
+
+      - name: Build Docker image
+        run: bash ci/build-docker.sh
+
+      - name: Push Docker image
+        run: bash ci/push-docker.sh
+        
