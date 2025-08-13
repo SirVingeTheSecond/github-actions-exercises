@@ -50,10 +50,13 @@ jobs:
     steps:
       - name: Download code artifact
         uses: actions/download-artifact@v4
+        with:
+          name: code
+          path: .
 
-      - name: Build Docker image
+      - name: Build Docker
         run: bash ci/build-docker.sh
-
-      - name: Push Docker image
+        
+      - name: Push Docker
         run: bash ci/push-docker.sh
         
